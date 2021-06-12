@@ -97,7 +97,7 @@ def lambda_handler(event, context):
 
 
 
-    print(json.dumps(file_data,ensure_ascii=False,indent="\t"))
+    return(json.dumps(file_data,ensure_ascii=False,indent="\t"))
 
 
 
