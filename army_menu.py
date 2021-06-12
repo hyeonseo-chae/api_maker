@@ -8,10 +8,16 @@ def lambda_handler(event, context):
 
 
     army_num = '7369'
-    call_page = '1000'
+    call_page = '10'
     lis = 'https://openapi.mnd.go.kr/3331313332343635353437343432313337/json/DS_TB_MNDT_DATEBYMLSVC_'+army_num+'/1/'+call_page
     res = []
     res = requests.get(lis).json()
+    call_page = res['DS_TB_MNDT_DATEBYMLSVC_'+army_num][list_total_count]
+    
+    lis = 'https://openapi.mnd.go.kr/3331313332343635353437343432313337/json/DS_TB_MNDT_DATEBYMLSVC_'+army_num+'/1/'+call_page
+    res = []
+    res = requests.get(lis).json()
+
     #print(res['DS_TB_MNDT_DATEBYMLSVC_7652']['row'][0]['brst'])
     res1 = res['DS_TB_MNDT_DATEBYMLSVC_'+army_num]['row']
     lists = []
