@@ -35,18 +35,22 @@ def lambda_handler(event, context):
         brsts=[]
         luncc=[]
         dinn=[]
+        cake=[]
+        regex = "\(.*\)|\s-\s.*"
     
         for jj in range(dateslist[q],dateslist[q+1]):
             if(res1[jj]['brst']!=''):
-                brsts.append(res1[jj]['brst'])
+                brsts.append(re.sub(regex,'',res1[jj]['brst'])+'('+res1[jj]['brst_cal']+')')
             if(res1[jj]['lunc']!=''):
-                luncc.append(res1[jj]['lunc'])
+                luncc.append(re.sub(regex,'',res1[jj]['lunc'])+'('+res1[jj]['lunc_cal']+')')
             if(res1[jj]['dinr']!=''):
-                dinn.append(res1[jj]['dinr'])
-            if(len(res1[dateslist[q]]['dates'])==8):
-                res1[dateslist[q]]['dates'] = res1[dateslist[q]]['dates'][0:4]+'-'+res1[dateslist[q]]['dates'][4:6]+'-'+res1[dateslist[q]]['dates'][6:8]
-        
-        file_data[res1[dateslist[q]]['dates']] = {'brst':brsts,'lunc':luncc,'dinr':dinn}
+                dinn.append(re.sub(regex,'',res1[jj]['dinr'])+'('+res1[jj]['dinr_cal']+')')
+            if(res1[jj]['adspcfd']!=''):
+                cake.append(re.sub(regex,'',res1[jj]['adspcfd'])+'('+res1[jj]['adspcfd_cal']+')')
+        if(len(res1[dateslist[q]]['dates'])==8):
+           res1[dateslist[q]]['dates'] = res1[dateslist[q]]['dates'][0:4]+'-'+res1[dateslist[q]]['dates'][4:6]+'-'+res1[dateslist[q]]['dates'][6:8]
+
+        file_data[res1[dateslist[q]]['dates']] = {'brst':brsts,'lunc':luncc,'dinr':dinn,'cake':cake}
 
 
     return(json.dumps(file_data,ensure_ascii=False,indent="\t"))
