@@ -2,7 +2,7 @@ import requests
 import json
 from collections import OrderedDict
 import re
-import pandas as pd
+
 
 def lambda_handler(event, context):
     file_data = OrderedDict()
