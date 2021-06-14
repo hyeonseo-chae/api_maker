@@ -2,11 +2,20 @@ import requests
 import json
 from collections import OrderedDict
 import re
+import datetime
+
 
 def lambda_handler(event, context):
+    a = event['queryStringParameters']['daily']
+    bbb = int(a)
+
+    dd = str(datetime.datetime.now()+datetime.timedelta(days=bbb)) 
+    cc = dd.split()
+    today_date = cc[0]
+    
     file_data = OrderedDict()
-
-
+    print(context)
+    print(event)
     army_num = '7369'
     call_page = '10'
     lis = 'https://openapi.mnd.go.kr/3331313332343635353437343432313337/json/DS_TB_MNDT_DATEBYMLSVC_'+army_num+'/1/'+call_page
@@ -92,14 +101,17 @@ def lambda_handler(event, context):
 
             if(len(res1[dateslist[q]]['dates'])==8):
                 res1[dateslist[q]]['dates'] = res1[dateslist[q]]['dates'][0:4]+'-'+res1[dateslist[q]]['dates'][4:6]+'-'+res1[dateslist[q]]['dates'][6:8]
-
-            file_data[res1[dateslist[q]]['dates']] = {'brst':brsts,'lunc':luncc,'dinr':dinn,'cake':cake}
-
-
-
-    return(json.dumps(file_data,ensure_ascii=False,indent="\t"))
+            if (today_date == str(res1[dateslist[q]]['dates'])):
+                file_data[res1[dateslist[q]]['dates']] = {'brst':brsts,'lunc':luncc,'dinr':dinn,'cake':cake}
 
 
-
-
-
+    return {
+        "body" : json.dumps(file_data,ensure_ascii=False,indent="\t")
+    }
+   
+    
+    # return {
+    #     "body" : json.dumps({
+    #         "b":b
+    #     })
+    # }
