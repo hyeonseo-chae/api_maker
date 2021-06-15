@@ -7,16 +7,30 @@ import datetime
 
 def lambda_handler(event, context):
     a = event['queryStringParameters']['daily']
-    bbb = int(a)
-
-    dd = str(datetime.datetime.now()+datetime.timedelta(days=bbb)) 
-    cc = dd.split()
-    today_date = cc[0]
+ 
+    if(str(a)=='w'):
+        option = 1
+        dd = str(datetime.datetime.now()-datetime.timedelta(days=datetime.datetime.today().weekday())) 
+        cc = dd.split()
+        today_date = cc[0]
+    elif(str(a)=='m'): 
+        option = 2
+        dd = str(datetime.datetime.now()-datetime.timedelta(days=((datetime.datetime.now().day)-1)))  
+        cc = dd.split()
+        today_date = cc[0]
+        #datetime.datetime.now().day
+    else:
+        option=0
+        bbb = int(a)
+        dd = str(datetime.datetime.now()+datetime.timedelta(days=bbb)) 
+#datetime.date(2019,1,20).weekday() 
+        cc = dd.split()
+        today_date = cc[0]
     
     file_data = OrderedDict()
     print(context)
     print(event)
-    army_num = '7369'
+    army_num = '7369'   
     call_page = '10'
     lis = 'https://openapi.mnd.go.kr/3331313332343635353437343432313337/json/DS_TB_MNDT_DATEBYMLSVC_'+army_num+'/1/'+call_page
     res = []
@@ -101,8 +115,26 @@ def lambda_handler(event, context):
 
             if(len(res1[dateslist[q]]['dates'])==8):
                 res1[dateslist[q]]['dates'] = res1[dateslist[q]]['dates'][0:4]+'-'+res1[dateslist[q]]['dates'][4:6]+'-'+res1[dateslist[q]]['dates'][6:8]
-            if (today_date == str(res1[dateslist[q]]['dates'])):
+                
+                
+            if (option==0 and today_date == str(res1[dateslist[q]]['dates'])):
                 file_data[res1[dateslist[q]]['dates']] = {'brst':brsts,'lunc':luncc,'dinr':dinn,'cake':cake}
+            elif(option==1):
+                for fff in range(-2,5): 
+                    if(today_date == str(res1[dateslist[q]]['dates'])):
+                        #dd = str(datetime.datetime.now()-datetime.timedelta(days=datetime.date(datetime.datetime.now()).weekday()))
+                        file_data[res1[dateslist[q]]['dates']] = {'brst':brsts,'lunc':luncc,'dinr':dinn,'cake':cake}
+                    dd = str(datetime.datetime.now()+datetime.timedelta(days=fff))
+                    cc = dd.split()
+                    today_date = cc[0]
+            elif(option==2):
+                for ooo in range (0,32):
+                    if(today_date == str(res1[dateslist[q]]['dates'])):  
+                        file_data[res1[dateslist[q]]['dates']] = {'brst':brsts,'lunc':luncc,'dinr':dinn,'cake':cake}
+                    dd = str(datetime.datetime.now()+datetime.timedelta(days=ooo)) 
+                    cc = dd.split()
+                    today_date = cc[0]
+                       
 
 
     return {
