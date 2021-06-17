@@ -3,11 +3,15 @@ import json
 from collections import OrderedDict
 import re
 import datetime
+from datetime import date
 
 
 def lambda_handler(event, context):
-    a = event['queryStringParameters']['daily']
- 
+    start = event['queryStringParameters']['start']
+    end=event['queryStringParameters']['end']
+    army=event['queryStringParameters']['army']
+    a='w'
+    '''
     if(str(a)=='w'):
         option = 1
         dd = str(datetime.datetime.now()-datetime.timedelta(days=datetime.datetime.today().weekday())) 
@@ -26,11 +30,12 @@ def lambda_handler(event, context):
 #datetime.date(2019,1,20).weekday() 
         cc = dd.split()
         today_date = cc[0]
+    '''
     
     file_data = OrderedDict()
     print(context)
     print(event)
-    army_num = '7369'   
+    army_num = army   
     call_page = '10'
     lis = 'https://openapi.mnd.go.kr/3331313332343635353437343432313337/json/DS_TB_MNDT_DATEBYMLSVC_'+army_num+'/1/'+call_page
     res = []
@@ -45,12 +50,24 @@ def lambda_handler(event, context):
     res1 = res['DS_TB_MNDT_DATEBYMLSVC_'+army_num]['row']
     lists = []
     lists2 = []
+    startFract = start.split('-')
+    endFract = end.split('-')
+    startDate = date(int(startFract[0]),int(startFract[1]),int(startFract[2]))
+    endDate = date(int(endFract[0]),int(endFract[1]),int(endFract[2]))
+    interval = endDate - startDate
     for a in range(2020,2030):
         for b in range(1,13):
             for c in range(1,32):
 
                 lists.append(str(a)+'-'+str(b).zfill(2)+'-'+str(c).zfill(2))
                 lists2.append(str(a)+str(b).zfill(2)+str(c).zfill(2))
+    '''
+    for i in range(int(startFract[0]),int(endFract[0])+1):
+        for j in range(int(startFract[1]),int(endFract[1])+1):
+            for k in range(int(startFract[2]),int(endFract[2])+1):
+                lists.append(str(i)+'-'+str(j).zfill(2)+'-'+str(k).zfill(2))
+                lists2.append(str(i)+str(j).zfill(2)+str(k).zfill(2))
+    '''
      #print(lists[0])
     dateslist = []
     for i in range(0,int(call_page)):
@@ -60,6 +77,8 @@ def lambda_handler(event, context):
         if res1[i]['dates'] in lists2:
             # print(i)
             dateslist.append(i)
+
+
 
     # print("길이"+str(len(dateslist)))
     #adspcfd
@@ -72,7 +91,7 @@ def lambda_handler(event, context):
         regex = "\(.*\)|\s-\s.*"
 
     #re.sub(regex, '', text)
-        if(dateslist[q+1]-dateslist[q]<15):
+        if(dateslist[q+1]-dateslist[q]<9):
             for jj in range(dateslist[q],dateslist[q+1]):
                 if(res1[jj]['brst']!=''):
                     if(res1[jj]['brst_cal'].find('k')==int('-1')):
@@ -115,35 +134,38 @@ def lambda_handler(event, context):
 
             if(len(res1[dateslist[q]]['dates'])==8):
                 res1[dateslist[q]]['dates'] = res1[dateslist[q]]['dates'][0:4]+'-'+res1[dateslist[q]]['dates'][4:6]+'-'+res1[dateslist[q]]['dates'][6:8]
-                
-                
+            
+            #file_data[res1[dateslist[q]]['dates']] = {'brst':brsts,'lunc':luncc,'dinr':dinn,'cake':cake}
+            for fff in range(0,interval.days+1):
+                tempDate=startDate+datetime.timedelta(days=fff)
+                if(tempDate.isoformat() == res1[dateslist[q]]['dates']):
+                    file_data[res1[dateslist[q]]['dates']] = {'brst':brsts,'lunc':luncc,'dinr':dinn,'cake':cake}
+            '''
             if (option==0 and today_date == str(res1[dateslist[q]]['dates'])):
                 file_data[res1[dateslist[q]]['dates']] = {'brst':brsts,'lunc':luncc,'dinr':dinn,'cake':cake}
             elif(option==1):
-                for fff in range(-2,5): 
+                for fff in range(0,7): 
                     if(today_date == str(res1[dateslist[q]]['dates'])):
                         #dd = str(datetime.datetime.now()-datetime.timedelta(days=datetime.date(datetime.datetime.now()).weekday()))
                         file_data[res1[dateslist[q]]['dates']] = {'brst':brsts,'lunc':luncc,'dinr':dinn,'cake':cake}
-                    dd = str(datetime.datetime.now()+datetime.timedelta(days=fff))
+                    dd = str(datetime.datetime.now()+datetime.timedelta(days=fff)-datetime.timedelta(days=datetime.datetime.today().weekday()))
                     cc = dd.split()
                     today_date = cc[0]
             elif(option==2):
                 for ooo in range (0,32):
                     if(today_date == str(res1[dateslist[q]]['dates'])):  
                         file_data[res1[dateslist[q]]['dates']] = {'brst':brsts,'lunc':luncc,'dinr':dinn,'cake':cake}
-                    dd = str(datetime.datetime.now()+datetime.timedelta(days=ooo)) 
+                    dd = str(datetime.datetime.now()-datetime.timedelta(days=((datetime.datetime.now().day)-ooo-1))) 
                     cc = dd.split()
                     today_date = cc[0]
-                       
+            '''        
 
 
+    # return {
+    #     "body" : json.dumps(file_data,ensure_ascii=False,indent="\t")
+    # }
+   
+    
     return {
         "body" : json.dumps(file_data,ensure_ascii=False,indent="\t")
     }
-   
-    
-    # return {
-    #     "body" : json.dumps({
-    #         "b":b
-    #     })
-    # }
