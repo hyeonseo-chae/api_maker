@@ -7,7 +7,7 @@ from datetime import date
 
 
 def lambda_handler(event, context):
-    start = event['queryStringParameters']['start']
+    start = event['queryStringParameters']['start'] 
     end=event['queryStringParameters']['end']
     army=event['queryStringParameters']['army']
     a='w'
@@ -32,7 +32,7 @@ def lambda_handler(event, context):
         today_date = cc[0]
     '''
     
-    file_data = OrderedDict()
+    file_data =[]
     print(context)
     print(event)
     army_num = army   
@@ -134,12 +134,14 @@ def lambda_handler(event, context):
 
             if(len(res1[dateslist[q]]['dates'])==8):
                 res1[dateslist[q]]['dates'] = res1[dateslist[q]]['dates'][0:4]+'-'+res1[dateslist[q]]['dates'][4:6]+'-'+res1[dateslist[q]]['dates'][6:8]
-            
+            re_list=[]
             #file_data[res1[dateslist[q]]['dates']] = {'brst':brsts,'lunc':luncc,'dinr':dinn,'cake':cake}
             for fff in range(0,interval.days+1):
                 tempDate=startDate+datetime.timedelta(days=fff)
                 if(tempDate.isoformat() == res1[dateslist[q]]['dates']):
-                    file_data[res1[dateslist[q]]['dates']] = {'brst':brsts,'lunc':luncc,'dinr':dinn,'cake':cake}
+                    file_data.append({'date':res1[dateslist[q]]['dates'],'brst':brsts,'lunc':luncc,'dinr':dinn,'cake':cake})
+
+                    
             '''
             if (option==0 and today_date == str(res1[dateslist[q]]['dates'])):
                 file_data[res1[dateslist[q]]['dates']] = {'brst':brsts,'lunc':luncc,'dinr':dinn,'cake':cake}
