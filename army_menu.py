@@ -110,8 +110,9 @@ def lambda_handler(event, context):
                 tempDate=startDate+datetime.timedelta(days=fff)
                 if(tempDate.isoformat() == res1[dateslist[q]]['dates']):
                     datesplit = res1[dateslist[q]]['dates'].split('-')
+                    date_ko = datesplit[0]+'년 '+datesplit[1]+'월 '+datesplit[2]+'일'
                     dateweekday = weeklist[datetime.date(int(datesplit[0]),int(datesplit[1]),int(datesplit[2])).weekday()]
-                    file_data.append({'date':res1[dateslist[q]]['dates'],'weekday':dateweekday,'brst':brsts,'lunc':luncc,'dinr':dinn,'cake':cake})
+                    file_data.append({'date':date_ko,'weekday':dateweekday,'brst':brsts,'lunc':luncc,'dinr':dinn,'cake':cake})
  
                     
     
