@@ -45,10 +45,11 @@ def lambda_handler(event, context):
 
     dateslist = []
     for i in range(0,int(call_page)):
-        if res1[i]['dates'] in lists:
+        tempResDate=res1[i]['dates']
+        if tempResDate in lists:
             # print(i)
             dateslist.append(i)
-        if res1[i]['dates'] in lists2:
+        if tempResDate in lists2:
             # print(i)
             dateslist.append(i)
 
@@ -60,62 +61,78 @@ def lambda_handler(event, context):
         cake=[]
         regex = "\(.*\)|\s-\s.*"
 
+        dateslistQ=dateslist[q]
+        dateslistQ1=dateslist[q+1]
 
-        if(dateslist[q+1]-dateslist[q]<9):
-            for jj in range(dateslist[q],dateslist[q+1]):
-                if(res1[jj]['brst']!=''):
-                    if(res1[jj]['brst_cal'].find('k')==int('-1')):
-                        if(res1[jj]['brst_cal'].find('*')!=int('-1')):
-                            brsts.append(re.sub(regex,'',res1[jj]['brst'])+'('+res1[jj]['brst_cal'][2:]+' kcal)')
+        if(dateslistQ1-dateslistQ<9):
+            for jj in range(dateslistQ,dateslistQ1):
+                res1jj=res1[jj]
+                if(res1jj['brst']!=''):
+                    if(res1jj['brst_cal'].find('k')==int('-1')):
+                        if(res1jj['brst_cal'].find('*')!=int('-1')):
+                            brsts.append(re.sub(regex,'',res1jj['brst'])+'('+res1jj['brst_cal'][2:]+' kcal)')
                         else:
-                             brsts.append(re.sub(regex,'',res1[jj]['brst'])+'('+res1[jj]['brst_cal']+' kcal)')
+                             brsts.append(re.sub(regex,'',res1jj['brst'])+'('+res1jj['brst_cal']+' kcal)')
                     else:
-                        brsts.append(re.sub(regex,'',res1[jj]['brst'])+'('+res1[jj]['brst_cal']+')')
+                        brsts.append(re.sub(regex,'',res1jj['brst'])+'('+res1jj['brst_cal']+')')
 
-                if(res1[jj]['lunc']!=''):
-                    if(res1[jj]['lunc_cal'].find('k')==int('-1')):
-                        if(res1[jj]['lunc_cal'].find('*')!=int('-1')):
-                            luncc.append(re.sub(regex,'',res1[jj]['lunc'])+'('+res1[jj]['lunc_cal'][2:]+' kcal)')
+                if(res1jj['lunc']!=''):
+                    if(res1jj['lunc_cal'].find('k')==int('-1')):
+                        if(res1jj['lunc_cal'].find('*')!=int('-1')):
+                            luncc.append(re.sub(regex,'',res1jj['lunc'])+'('+res1jj['lunc_cal'][2:]+' kcal)')
                         else:
-                             luncc.append(re.sub(regex,'',res1[jj]['lunc'])+'('+res1[jj]['lunc_cal']+' kcal)')
+                             luncc.append(re.sub(regex,'',res1jj['lunc'])+'('+res1jj['lunc_cal']+' kcal)')
                     else:
-                        luncc.append(re.sub(regex,'',res1[jj]['lunc'])+'('+res1[jj]['lunc_cal']+')')
+                        luncc.append(re.sub(regex,'',res1jj['lunc'])+'('+res1jj['lunc_cal']+')')
 
 
-                if(res1[jj]['dinr']!=''):
-                    if(res1[jj]['dinr_cal'].find('k')==int('-1')):
-                        if(res1[jj]['dinr_cal'].find('*')!=int('-1')):
-                            dinn.append(re.sub(regex,'',res1[jj]['dinr'])+'('+res1[jj]['dinr_cal'][2:]+' kcal)')
+                if(res1jj['dinr']!=''):
+                    if(res1jj['dinr_cal'].find('k')==int('-1')):
+                        if(res1jj['dinr_cal'].find('*')!=int('-1')):
+                            dinn.append(re.sub(regex,'',res1jj['dinr'])+'('+res1jj['dinr_cal'][2:]+' kcal)')
                         else:
-                             dinn.append(re.sub(regex,'',res1[jj]['dinr'])+'('+res1[jj]['dinr_cal']+' kcal)')
+                             dinn.append(re.sub(regex,'',res1jj['dinr'])+'('+res1jj['dinr_cal']+' kcal)')
                     else:
-                        dinn.append(re.sub(regex,'',res1[jj]['dinr'])+'('+res1[jj]['dinr_cal']+')')
+                        dinn.append(re.sub(regex,'',res1jj['dinr'])+'('+res1jj['dinr_cal']+')')
 
-                if(res1[jj]['adspcfd']!='' and res1[jj]['adspcfd'].find('.')==int('-1')):
-                    if(res1[jj]['adspcfd_cal'].find('k')==int('-1')):
-                        if(res1[jj]['adspcfd_cal'].find('*')!=int('-1')):
-                            cake.append(re.sub(regex,'',res1[jj]['adspcfd'])+'('+res1[jj]['adspcfd_cal'][2:]+' kcal)')
+                if(res1jj['adspcfd']!='' and res1jj['adspcfd'].find('.')==int('-1')):
+                    if(res1jj['adspcfd_cal'].find('k')==int('-1')):
+                        if(res1jj['adspcfd_cal'].find('*')!=int('-1')):
+                            cake.append(re.sub(regex,'',res1jj['adspcfd'])+'('+res1jj['adspcfd_cal'][2:]+' kcal)')
                         else:
-                             cake.append(re.sub(regex,'',res1[jj]['adspcfd'])+'('+res1[jj]['adspcfd_cal']+' kcal)')
+                             cake.append(re.sub(regex,'',res1jj['adspcfd'])+'('+res1jj['adspcfd_cal']+' kcal)')
                     else:
-                        cake.append(re.sub(regex,'',res1[jj]['adspcfd'])+'('+res1[jj]['adspcfd_cal']+')')
+                        cake.append(re.sub(regex,'',res1jj['adspcfd'])+'('+res1jj['adspcfd_cal']+')')
 
 
 
-            if(len(res1[dateslist[q]]['dates'])==8):
-                res1[dateslist[q]]['dates'] = res1[dateslist[q]]['dates'][0:4]+'-'+res1[dateslist[q]]['dates'][4:6]+'-'+res1[dateslist[q]]['dates'][6:8]
+            if(len(res1[dateslistQ]['dates'])==8):
+                res1[dateslistQ]['dates'] = res1[dateslistQ]['dates'][0:4]+'-'+res1[dateslistQ]['dates'][4:6]+'-'+res1[dateslistQ]['dates'][6:8]
             re_list=[]
 
             for fff in range(0,interval.days+1):
                 tempDate=startDate+datetime.timedelta(days=fff)
-                if(tempDate.isoformat() == res1[dateslist[q]]['dates']):
-                    datesplit = res1[dateslist[q]]['dates'].split('-')
+                if(tempDate.isoformat() == res1[dateslistQ]['dates']):
+                    datesplit = res1[dateslistQ]['dates'].split('-')
                     date_ko = datesplit[0]+'년 '+datesplit[1]+'월 '+datesplit[2]+'일'
                     dateweekday = weeklist[datetime.date(int(datesplit[0]),int(datesplit[1]),int(datesplit[2])).weekday()]
-                    file_data.append({'date':date_ko,'weekday':dateweekday,'brst':brsts,'lunc':luncc,'dinr':dinn,'cake':cake})
+                    
+                    checkDuplicate=False
+                    for singleData in file_data:
+                        if(singleData["date"]==date_ko):
+                            singleData["brst"].extend(brsts)
+                            singleData["lunc"].extend(luncc)
+                            singleData["dinr"].extend(dinn)
+                            singleData["cake"].extend(cake)
+                            checkDuplicate=True
+                            break
+                    if not checkDuplicate:
+                        file_data.append({'date':date_ko,'weekday':dateweekday,'brst':brsts,'lunc':luncc,'dinr':dinn,'cake':cake})
  
                     
     
     return {
-        "body" : json.dumps(file_data,ensure_ascii=False,indent="\t")
+        "body" : json.dumps(
+             file_data
+        ,ensure_ascii=False,indent="\t")
     }
