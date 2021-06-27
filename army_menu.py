@@ -64,7 +64,7 @@ def lambda_handler(event, context):
         dateslistQ=dateslist[q]
         dateslistQ1=dateslist[q+1]
 
-        if(dateslistQ1-dateslistQ<9):
+        if(dateslistQ1-dateslistQ<15): 
             for jj in range(dateslistQ,dateslistQ1):
                 res1jj=res1[jj]
                 if(res1jj['brst']!=''):
