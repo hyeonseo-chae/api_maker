@@ -128,8 +128,8 @@ def lambda_handler(event, context):
                             break
                     if not checkDuplicate:
                         file_data.append({'date':date_ko,'weekday':dateweekday,'brst':brsts,'lunc':luncc,'dinr':dinn,'cake':cake})
- 
-                    
+    
+    file_data.sort(key=lambda element:element['date'])
     
     return {
         "body" : json.dumps(
